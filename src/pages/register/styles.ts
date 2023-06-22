@@ -31,3 +31,7 @@ export const Form = styled(Box, {
     gap: "$1",
   },
 });
+
+export const FormError = styled(Text, {
+  color: "$redshift500",
+});

@@ -1,8 +1,49 @@
-import React from 'react'
-import { Container, Form, Header } from './styles'
+import React, { useEffect } from 'react'
+import { Container, Form, FormError, Header } from './styles'
 import { Button, Heading, MultiStep, Text, TextInput } from '@redshiftui/react'
 import { ArrowRight } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
+
+const registerFormSchema = z.object({
+    username: z.string()
+        .min(3, "Nome de usuário deve conter mais de 3 caracteres")
+        .regex(/^([a-z\\-]+)$/i, "Nome de usuário deve ter apenas letras e hifens")
+        .transform((username) => username.toLowerCase()),
+    name: z.string()
+        .min(3, "Nome de usuário deve conter mais de 3 caracteres")
+        .regex(/^([a-z\\])$/i, "Nome de usuário deve ter apenas letras")
+})
+
+type RegisterFormData = z.infer<typeof registerFormSchema>
+
+
 function Register() {
+
+    const { register,
+        handleSubmit,
+        setValue,
+        formState: { errors, isSubmitting }
+    } = useForm<RegisterFormData>({
+        resolver: zodResolver(registerFormSchema),
+
+    })
+
+    const router = useRouter()
+
+    async function handleRegister(data: RegisterFormData) {
+        console.log(data)
+    }
+
+    useEffect(() => {
+        if (router.query?.username) {
+            const usernameParameter = String(router.query.username)
+            setValue('username', usernameParameter);
+        }
+    }, [router.query?.username])
+
     return (
         <Container>
             <Header>
@@ -17,15 +58,32 @@ function Register() {
                 <MultiStep size={4} currentStep={1} />
             </Header>
 
-            <Form as="form">
+            <Form as="form" onSubmit={handleSubmit(handleRegister)}>
                 <label>
                     <Text size="sm">Nome de usuário</Text>
-                    <TextInput prefix='redshift.com/' placeholder='seu-usuario' />
+                    <TextInput
+                        prefix='redshift.com/'
+                        placeholder='seu-usuario'
+                        {...register('username')}
+                    />
+                    {errors.username && (
+                        <FormError size="sm">
+                            {errors.username.message}
+                        </FormError>
+                    )}
                 </label>
 
                 <label>
                     <Text size="sm">Nome completo</Text>
-                    <TextInput placeholder='seu-usuario' />
+                    <TextInput
+                        placeholder='seu-usuario'
+                        {...register('name')}
+                    />
+                    {errors.name && (
+                        <FormError size="sm">
+                            {errors.name.message}
+                        </FormError>
+                    )}
                 </label>
 
                 <Button type='submit'>
