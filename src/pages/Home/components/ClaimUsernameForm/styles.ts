@@ -1,4 +1,4 @@
-import { Box, styled } from "@redshiftui/react";
+import { Box, Text, styled } from "@redshiftui/react";
 
 export const Form = styled(Box, {
   display: "grid",
@@ -9,5 +9,16 @@ export const Form = styled(Box, {
 
   "@media(max-width:600px)": {
     gridTemplateColumns: "1fr",
+  },
+});
+
+export const FormAnnotation = styled("div", {
+  marginTop: "$2",
+
+  [`> ${Text}`]: {
+    color: "$gray500",
+  },
+  [`> ${Text}.error`]: {
+    color: "$redshift500",
   },
 });
