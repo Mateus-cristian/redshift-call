@@ -15,7 +15,7 @@ export const Container = styled("div", {
     justifyContent: "center",
   },
 
-  "@media(max-width:500px)": {
+  "@media(max-width:600px)": {
     gap: "$10",
   },
 });
@@ -24,13 +24,13 @@ export const Hero = styled("div", {
   maxWidth: 480,
   padding: "$0 $10",
 
-  [`${Heading}`]: {
+  [`> ${Heading}`]: {
     "@media(max-width:800px)": {
       fontSize: "$5xl",
     },
   },
 
-  [`${Text}`]: {
+  [`> ${Text}`]: {
     marginTop: "$2",
     color: "$gray200",
 
@@ -44,7 +44,7 @@ export const Preview = styled("div", {
   paddingRight: "$8",
   overflow: "hidden",
 
-  "@media(max-width:500px)": {
+  "@media(max-width:600px)": {
     img: {
       objectFit: "contain",
       padding: 0,
