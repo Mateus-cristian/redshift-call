@@ -1,4 +1,4 @@
-import { Box, styled } from "@redshiftui/react";
+import { Box, Text, styled } from "@redshiftui/react";
 
 export const ConnectBox = styled(Box, {
   marginTop: "$6",
@@ -16,4 +16,11 @@ export const ConnectItem = styled("div", {
   borderRadius: "$md",
 
   marginBottom: "$2",
+});
+
+export const AuthError = styled(Text, {
+  color: "$redshift300",
+  fontWeight: "$bold",
+  textDecoration: "underline red",
+  marginBottom: "$4",
 });
