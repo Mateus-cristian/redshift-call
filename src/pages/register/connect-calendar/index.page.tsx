@@ -4,10 +4,12 @@ import { Button, Heading, MultiStep, Text, TextInput } from '@redshiftui/react'
 import { ArrowRight } from 'phosphor-react'
 import { api } from '../../../lib/axios'
 import { ConnectBox, ConnectItem } from './styles'
-
+import { useSession, signIn, signOut } from "next-auth/react"
 
 
 export default function ConnectCalendar() {
+    const session = useSession();
+
 
 
     return (
@@ -27,8 +29,15 @@ export default function ConnectCalendar() {
             <ConnectBox>
                 <ConnectItem>
                     <Text>Google Calendar</Text>
-                    <Button variant="secondary">Conectar  <ArrowRight /></Button>
+                    <Button
+                        variant="secondary"
+                        onClick={() => signIn('google')}
+                    >Conectar  <ArrowRight /></Button>
                 </ConnectItem>
+
+
+
+
                 <Button type='submit'>
                     Proxímo passo
                     <ArrowRight />
