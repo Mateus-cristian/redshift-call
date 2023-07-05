@@ -15,7 +15,12 @@ interface CalendarWeek {
 
 type CalendarWeeks = CalendarWeek[];
 
-function Calendar() {
+interface CalendarProps {
+    selectedDate?: Date | null;
+    onDateSelected: (date: Date) => void;
+}
+
+function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
 
     const [currentDate, setCurrentDate] = useState(() => {
         return dayjs().set('date', 1)
@@ -65,7 +70,7 @@ function Calendar() {
                 return { date, disabled: true }
             }),
             ...daysInMonthArray.map(date => {
-                return { date, disabled: false }
+                return { date, disabled: date.endOf('day').isBefore(new Date()) }
             }),
             ...nextMonthFillArray.map(date => {
                 return { date, disabled: true }
@@ -119,7 +124,11 @@ function Calendar() {
                         <tr key={week}>
                             {days.map(({ date, disabled }) => (
                                 <td key={date.toString()}>
-                                    <CalendarDay disabled={disabled}>{date.get('date')}</CalendarDay>
+                                    <CalendarDay
+                                        onClick={() => onDateSelected(date.toDate())}
+                                        disabled={disabled}>
+                                        {date.get('date')}
+                                    </CalendarDay>
                                 </td>
                             ))}
                         </tr>
