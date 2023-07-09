@@ -7,6 +7,10 @@ export const globalStyles = globalCss({
     margin: 0,
   },
 
+  "p,span,h2": {
+    margin: "0 !important",
+  },
+
   body: {
     backgroundColor: "$gray900",
     color: "$gray100",

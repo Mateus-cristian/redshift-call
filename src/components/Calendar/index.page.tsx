@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 
 interface BlockedDates {
     blockedWeekDays: number[]
+    blockedDates: number[]
 }
 interface CalendarWeek {
     week: number;
@@ -58,7 +59,7 @@ function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
             const response = await api.get(`/users/${username}/blocked-dates`, {
                 params: {
                     year: currentDate.get('year'),
-                    month: currentDate.get('month'),
+                    month: String(currentDate.get('month') + 1).padStart(2, '0'),
                 }
             })
 
@@ -66,6 +67,10 @@ function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
         })
 
     const calendarWeeks = useMemo(() => {
+        if (!blockedDates) {
+            return []
+        }
+
         const daysInMonthArray = Array.from({
             length: currentDate.daysInMonth(),
         }).map((_, i) => {
@@ -96,7 +101,8 @@ function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
                 return {
                     date,
                     disabled: date.endOf('day').isBefore(new Date()) ||
-                        blockedDates?.blockedWeekDays.includes(date.get('day'))
+                        blockedDates?.blockedWeekDays.includes(date.get('day')) ||
+                        blockedDates.blockedDates.includes(date.get('date')),
                 }
             }),
             ...nextMonthFillArray.map(date => {
