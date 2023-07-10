@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { convertTimeStringToMinutes } from '../../../utils/convert-time-string-to-minutes'
 import { api } from '../../../lib/axios'
 import { useRouter } from 'next/router'
+import { NextSeo } from "next-seo";
 
 const timeIntervalFormSchema = z.object({
     intervals: z.array(z.object({
@@ -86,77 +87,83 @@ export default function TimeIntervals() {
     const weekDays = getWeekDays()
 
     return (
-        <Container>
-            <Header>
-                <Heading as="strong" >
-                    Bem-vindo ao Redshift Call!
-                </Heading>
-                <Text>
-                    conecte o seu calendário para verificar automaticamente as horas
-                    ocupadas e os novos eventos aá medida em que são agendados
-                </Text>
+        <>
+            <NextSeo
+                title='Selecione sua disponibilidade | Redshift Call'
+                noindex
+            />
+            <Container>
+                <Header>
+                    <Heading as="strong" >
+                        Bem-vindo ao Redshift Call!
+                    </Heading>
+                    <Text>
+                        conecte o seu calendário para verificar automaticamente as horas
+                        ocupadas e os novos eventos aá medida em que são agendados
+                    </Text>
 
-                <MultiStep size={4} currentStep={3} />
-            </Header>
+                    <MultiStep size={4} currentStep={3} />
+                </Header>
 
 
-            <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
-                <IntervalContainer>
+                <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
+                    <IntervalContainer>
 
-                    {fields.map((field, index) => (
-                        <IntervalItem key={field.id}>
+                        {fields.map((field, index) => (
+                            <IntervalItem key={field.id}>
 
-                            <IntervalDay>
-                                <Controller
-                                    name={`intervals.${index}.enabled`}
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            onCheckedChange={(checked) => {
-                                                field.onChange(checked === true)
-                                            }}
-                                            checked={field.value}
-                                        />
-                                    )}
-                                />
-                                <Text>{weekDays[field.weekDay]}</Text>
-                            </IntervalDay>
+                                <IntervalDay>
+                                    <Controller
+                                        name={`intervals.${index}.enabled`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Checkbox
+                                                onCheckedChange={(checked) => {
+                                                    field.onChange(checked === true)
+                                                }}
+                                                checked={field.value}
+                                            />
+                                        )}
+                                    />
+                                    <Text>{weekDays[field.weekDay]}</Text>
+                                </IntervalDay>
 
-                            <IntervalInputs>
-                                <TextInput
-                                    {...register(`intervals.${index}.startTime`)}
-                                    size='sm'
-                                    type="time"
-                                    step={60}
-                                    disabled={wIntervals[index].enabled === false}
-                                />
-                                <TextInput
-                                    {...register(`intervals.${index}.endTime`)}
-                                    size='sm'
-                                    type="time"
-                                    step={60}
-                                    disabled={wIntervals[index].enabled === false}
-                                />
+                                <IntervalInputs>
+                                    <TextInput
+                                        {...register(`intervals.${index}.startTime`)}
+                                        size='sm'
+                                        type="time"
+                                        step={60}
+                                        disabled={wIntervals[index].enabled === false}
+                                    />
+                                    <TextInput
+                                        {...register(`intervals.${index}.endTime`)}
+                                        size='sm'
+                                        type="time"
+                                        step={60}
+                                        disabled={wIntervals[index].enabled === false}
+                                    />
 
-                            </IntervalInputs>
-                        </IntervalItem>
-                    ))}
+                                </IntervalInputs>
+                            </IntervalItem>
+                        ))}
 
-                </IntervalContainer>
+                    </IntervalContainer>
 
-                {errors.intervals && (
-                    <FormError>
-                        {errors.intervals.message}
-                    </FormError>
-                )}
+                    {errors.intervals && (
+                        <FormError>
+                            {errors.intervals.message}
+                        </FormError>
+                    )}
 
-                <Button type='submit' disabled={isSubmitting}>
-                    Proxímo passo
-                    <ArrowRight />
-                </Button>
-            </IntervalBox>
+                    <Button type='submit' disabled={isSubmitting}>
+                        Proxímo passo
+                        <ArrowRight />
+                    </Button>
+                </IntervalBox>
 
-        </Container>
+            </Container>
+        </>
     )
 }
 

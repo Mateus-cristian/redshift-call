@@ -6,6 +6,7 @@ import { api } from '../../../lib/axios'
 import { AuthError, ConnectBox, ConnectItem } from './styles'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from 'next/router'
+import { NextSeo } from "next-seo";
 
 export default function ConnectCalendar() {
     const session = useSession();
@@ -23,55 +24,61 @@ export default function ConnectCalendar() {
     }
 
     return (
-        <Container>
-            <Header>
-                <Heading as="strong" >
-                    Bem-vindo ao Redshift Call!
-                </Heading>
-                <Text>
-                    conecte o seu calendário para verificar automaticamente as horas
-                    ocupadas e os novos eventos aá medida em que são agendados
-                </Text>
+        <>
+            <NextSeo
+                title='Conecte sua agenda do google | Redshift Call'
+                noindex
+            />
+            <Container>
+                <Header>
+                    <Heading as="strong" >
+                        Bem-vindo ao Redshift Call!
+                    </Heading>
+                    <Text>
+                        conecte o seu calendário para verificar automaticamente as horas
+                        ocupadas e os novos eventos aá medida em que são agendados
+                    </Text>
 
-                <MultiStep size={4} currentStep={2} />
-            </Header>
+                    <MultiStep size={4} currentStep={2} />
+                </Header>
 
-            <ConnectBox>
-                <ConnectItem>
-                    <Text>Google Calendar</Text>
-                    {isSignIn ? (
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            disabled
-                            onClick={() => signOut()}
-                        >Conectado  <Check />
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="secondary"
-                            onClick={handleConnectCalendar}
-                        >Conectar  <ArrowRight />
-                        </Button>
+                <ConnectBox>
+                    <ConnectItem>
+                        <Text>Google Calendar</Text>
+                        {isSignIn ? (
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                disabled
+                                onClick={() => signOut()}
+                            >Conectado  <Check />
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="secondary"
+                                onClick={handleConnectCalendar}
+                            >Conectar  <ArrowRight />
+                            </Button>
+                        )}
+
+                    </ConnectItem>
+
+                    {hasAuthError && (
+                        <AuthError size='sm'>
+                            Falha ao se conectar ao Google,verifique se você habilitou as
+                            permissões de acesso ao Google Calendar
+                        </AuthError>
                     )}
 
-                </ConnectItem>
-
-                {hasAuthError && (
-                    <AuthError size='sm'>
-                        Falha ao se conectar ao Google,verifique se você habilitou as
-                        permissões de acesso ao Google Calendar
-                    </AuthError>
-                )}
-
-                <Button onClick={handleNavigateToNextStep} type='submit' disabled={!isSignIn}>
-                    Proxímo passo
-                    <ArrowRight />
-                </Button>
-            </ConnectBox>
+                    <Button onClick={handleNavigateToNextStep} type='submit' disabled={!isSignIn}>
+                        Proxímo passo
+                        <ArrowRight />
+                    </Button>
+                </ConnectBox>
 
 
-        </Container>
+            </Container>
+        </>
     )
 }
 
