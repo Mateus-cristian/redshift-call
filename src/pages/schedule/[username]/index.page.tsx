@@ -1,9 +1,13 @@
 import { Avatar, Heading, Text } from "@redshiftui/react";
-import { Container, UserHeader } from "./styles";
+import { Container, ContainerIcons, HeaderPage, UserHeader } from "./styles";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { prisma } from "../../../lib/prisma";
 import ScheduleForm from "./ScheduleForm/index.page";
 import { NextSeo } from "next-seo";
+import { FaSignOutAlt, FaUserEdit } from 'react-icons/fa'
+import { signOut } from "next-auth/react"
+
+
 
 interface ScheduleProps {
     user: {
@@ -15,11 +19,24 @@ interface ScheduleProps {
 
 export default function Schedule({ user }: ScheduleProps) {
 
+
+
+    async function handleSignOut() {
+        await signOut({ callbackUrl: '/' });
+    }
+
+
     return (
         <>
             <NextSeo
                 title={`Agendar com ${user.name} | Redshift Call`}
             />
+            <HeaderPage>
+                <ContainerIcons>
+                    <FaUserEdit color="#fff" size={42} style={{ cursor: 'pointer' }} title="editar perfil" />
+                    <FaSignOutAlt color="#fff" size={42} style={{ cursor: 'pointer' }} title="log out" onClick={handleSignOut} />
+                </ContainerIcons>
+            </HeaderPage>
             <Container>
                 <UserHeader>
                     <Avatar src={user.avatarUrl} />

@@ -6,6 +6,17 @@ export const Container = styled("div", {
   margin: "$20 auto $4",
 });
 
+export const HeaderPage = styled("div", {
+  display: "flex",
+  padding: "2rem 3rem 0",
+  justifyContent: "flex-end",
+});
+
+export const ContainerIcons = styled("div", {
+  display: "flex",
+  gap: "2rem",
+});
+
 export const UserHeader = styled("div", {
   display: "flex",
   flexDirection: "column",
