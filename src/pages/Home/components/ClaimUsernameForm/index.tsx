@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
+import { api } from '../../../../lib/axios'
+import { signIn } from "next-auth/react"
 
 const claimUsernameFormSchema = z.object({
     username: z.string()
@@ -27,6 +29,15 @@ function ClaimUsernameForm() {
     async function handleClaimUsername(data: ClaimUsernameFormData) {
         const { username } = data
 
+        const { data: user } = await api.post('/users/confirm-user', {
+            username: username
+        })
+
+        if (user.userExist) {
+            await signIn('google', { callbackUrl: `/schedule/${username}` })
+            return;
+        }
+
         await router.push(`/register?username=${username}`)
     }
 
@@ -39,7 +50,7 @@ function ClaimUsernameForm() {
                     placeholder='seu-usuario'
                     {...register('username')} />
                 <Button size="sm" type='submit' disabled={isSubmitting}>
-                    Reservar
+                    Conectar
                     <ArrowRight />
                 </Button>
 

@@ -15,6 +15,11 @@ export const HeaderPage = styled("div", {
 export const ContainerIcons = styled("div", {
   display: "flex",
   gap: "2rem",
+
+  [`> svg:hover`]: {
+    scale: 1.25,
+    transition: "ease-in-out .5s",
+  },
 });
 
 export const UserHeader = styled("div", {
