@@ -6,6 +6,7 @@ import ScheduleForm from "./ScheduleForm/index.page";
 import { NextSeo } from "next-seo";
 import { FaSignOutAlt, FaUserEdit } from 'react-icons/fa'
 import { signOut } from "next-auth/react"
+import { useRouter } from "next/router";
 
 
 
@@ -14,15 +15,20 @@ interface ScheduleProps {
         name: string;
         bio: string;
         avatarUrl: string;
+        username: string;
     }
 }
 
 export default function Schedule({ user }: ScheduleProps) {
 
-
+    const router = useRouter()
 
     async function handleSignOut() {
         await signOut({ callbackUrl: '/' });
+    }
+
+    async function handleEditPerfil() {
+        await router.push(`/edit-perfil/${user.username}`)
     }
 
 
@@ -33,8 +39,8 @@ export default function Schedule({ user }: ScheduleProps) {
             />
             <HeaderPage>
                 <ContainerIcons>
-                    <FaUserEdit color="#fff" size={42} style={{ cursor: 'pointer' }} title="editar perfil" />
-                    <FaSignOutAlt color="#fff" size={42} style={{ cursor: 'pointer' }} title="log out" onClick={handleSignOut} />
+                    <FaUserEdit color="#fff" size={36} style={{ cursor: 'pointer' }} title="editar perfil" onClick={handleEditPerfil} />
+                    <FaSignOutAlt color="#fff" size={36} style={{ cursor: 'pointer' }} title="log out" onClick={handleSignOut} />
                 </ContainerIcons>
             </HeaderPage>
             <Container>
@@ -77,7 +83,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             user: {
                 name: user.name,
                 bio: user.bio,
-                avatarUrl: user.avatar_url
+                avatarUrl: user.avatar_url,
+                username: user.username
             }
         },
         revalidate: 60 * 60 * 24, // 1day
