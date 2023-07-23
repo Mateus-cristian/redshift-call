@@ -99,7 +99,7 @@ export default function TimeIntervals() {
                     </Heading>
                     <Text>
                         conecte o seu calendário para verificar automaticamente as horas
-                        ocupadas e os novos eventos ah medida em que são agendados
+                        ocupadas e os novos eventos à medida em que são agendados
                     </Text>
 
                     <MultiStep size={4} currentStep={3} />
