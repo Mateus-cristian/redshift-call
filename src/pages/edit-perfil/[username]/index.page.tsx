@@ -12,6 +12,7 @@ import { api } from '../../../lib/axios'
 import { useRouter } from 'next/router'
 import { NextSeo } from "next-seo";
 import { FaArrowLeft, FaSignOutAlt, FaUserEdit } from 'react-icons/fa'
+import { toast, Toaster } from 'react-hot-toast'
 
 import { resolve } from 'path'
 import { EditPerfilTitle } from './styles'
@@ -22,6 +23,12 @@ interface Intervals {
     start_time_in_minutes: number;
     user_id: string;
     week_day: number
+}
+
+interface User {
+    username: string;
+    name: string;
+    bio: string;
 }
 
 const updateRegisterFormSchema = z.object({
@@ -69,7 +76,11 @@ export default function Perfil() {
 
     const [loading, setLoading] = useState(true)
 
-    const { setValue: setValueUser, register: registerUser, formState: { isSubmitting: isSubmittingUser, errors: errorsUser } } = useForm({ resolver: zodResolver(updateRegisterFormSchema) })
+    const { setValue: setValueUser,
+        handleSubmit: handleSubmitUser,
+        register: registerUser,
+        formState: { isSubmitting: isSubmittingUser, errors: errorsUser }
+    } = useForm<User>({ resolver: zodResolver(updateRegisterFormSchema) })
 
     const {
         control,
@@ -107,6 +118,27 @@ export default function Perfil() {
         await api.post('/users/update-time-intervals', {
             intervals,
         })
+
+        toast('Intervalo de tempo atualizado', {
+            icon: '📆',
+            style: {
+                fontFamily: 'Roboto'
+            }
+        });
+    }
+
+    async function submitUser(data: User) {
+        await api.put('/users/profile', {
+            bio: data.bio,
+            username: data.username,
+            name: data.name
+        })
+        toast('Usuario atualizado', {
+            icon: '😀',
+            style: {
+                fontFamily: 'Roboto'
+            }
+        });
     }
 
     const weekDays = getWeekDays()
@@ -151,6 +183,10 @@ export default function Perfil() {
     return (
         <>
             <HeaderPage>
+                <Toaster
+                    position="top-center"
+                    reverseOrder={true}
+                />
                 <ContainerIcons>
                     <FaArrowLeft color="#fff" size={36} style={{ cursor: 'pointer' }} title="scheduling" onClick={() => router.back()} />
                     {/* <FaSignOutAlt color="#fff" size={36} style={{ cursor: 'pointer' }} title="log out" onClick={} /> */}
@@ -159,7 +195,7 @@ export default function Perfil() {
             <ContainerEditPerfil>
                 <EditPerfilTitle>Editar Perfil</EditPerfilTitle>
                 <Container>
-                    <Form as="form" >
+                    <Form as="form" onSubmit={handleSubmitUser(submitUser)} >
                         <label>
                             <Text size="sm">Nome de usuário</Text>
                             <TextInput
@@ -196,7 +232,7 @@ export default function Perfil() {
                             </FormAnnotation>
                         </label>
 
-                        <Button type='submit'>
+                        <Button type='submit' disabled={isSubmittingUser}>
                             Salvar
                         </Button>
                     </Form>
