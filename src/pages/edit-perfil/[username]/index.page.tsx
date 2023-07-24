@@ -232,7 +232,7 @@ export default function Perfil() {
                             <Text size="sm">Sobre você</Text>
                             <TextArea {...registerUser('bio')} />
                             <FormAnnotation size="sm">
-                                Fale um pouco sobre você. Isto será exibido na sua página pessoal.
+                                As alterações de perfil irão persistir após 1 minuto
                             </FormAnnotation>
                         </label>
 
