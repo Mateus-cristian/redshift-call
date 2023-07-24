@@ -26,13 +26,17 @@ export default async function handle(
   }
 
   const createSchedulingBody = z.object({
-    name: z.string(),
-    email: z.string().email(),
+    participants: z.array(
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+      })
+    ),
     observations: z.string(),
     date: z.string().datetime(),
   });
 
-  const { name, email, observations, date } = createSchedulingBody.parse(
+  const { participants, observations, date } = createSchedulingBody.parse(
     req.body
   );
 
@@ -57,26 +61,39 @@ export default async function handle(
     });
   }
 
-  const scheduling = await prisma.scheduling.create({
-    data: {
-      name,
-      email,
-      observations,
-      date: schedulingDate.toDate(),
-      user_id: user.id,
-    },
-  });
+  const attendees = participants.map((participant) => ({
+    email: participant.email,
+    displayName: participant.name,
+  }));
+
+  await Promise.all(
+    participants.map(({ email, name }) => {
+      return prisma.scheduling.create({
+        data: {
+          name,
+          email,
+          observations,
+          date: schedulingDate.toDate(),
+          user_id: user.id,
+        },
+      });
+    })
+  );
 
   const calendar = google.calendar({
     version: "v3",
     auth: await getGoogleOAuthToken(user.id),
   });
 
+  const participantNames = participants
+    .map((participant) => participant.name)
+    .join(",");
+
   await calendar.events.insert({
     calendarId: "primary",
     conferenceDataVersion: 1,
     requestBody: {
-      summary: `Redshift Call: ${name}`,
+      summary: `Redshift Call: ${participantNames}`,
       description: observations,
       start: {
         dateTime: schedulingDate.format(),
@@ -84,10 +101,10 @@ export default async function handle(
       end: {
         dateTime: schedulingDate.add(1, "hour").format(),
       },
-      attendees: [{ email, displayName: name }],
+      attendees: attendees,
       conferenceData: {
         createRequest: {
-          requestId: scheduling.id,
+          requestId: user.id,
           conferenceSolutionKey: {
             type: "hangoutsMeet",
           },
