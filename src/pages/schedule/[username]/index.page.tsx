@@ -87,6 +87,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 username: user.username
             }
         },
-        revalidate: 60 * 60 * 24, // 1day
     }
 }

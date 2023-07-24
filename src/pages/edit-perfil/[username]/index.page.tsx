@@ -191,7 +191,7 @@ export default function Perfil() {
                     <FaArrowLeft color="#fff" size={36} style={{ cursor: 'pointer' }} title="scheduling"
                         onClick={() => {
                             const username = router.query.username;
-                            router.replace(`/schedule/${username}?revalidate`)
+                            router.replace(`/schedule/${username}`)
                         }} />
 
                 </ContainerIcons>
