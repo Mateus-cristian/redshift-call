@@ -188,8 +188,12 @@ export default function Perfil() {
                     reverseOrder={true}
                 />
                 <ContainerIcons>
-                    <FaArrowLeft color="#fff" size={36} style={{ cursor: 'pointer' }} title="scheduling" onClick={() => router.back()} />
-                    {/* <FaSignOutAlt color="#fff" size={36} style={{ cursor: 'pointer' }} title="log out" onClick={} /> */}
+                    <FaArrowLeft color="#fff" size={36} style={{ cursor: 'pointer' }} title="scheduling"
+                        onClick={() => {
+                            const username = router.query.username;
+                            router.push(`schedule/${username}?revalidate`)
+                        }} />
+
                 </ContainerIcons>
             </HeaderPage>
             <ContainerEditPerfil>
